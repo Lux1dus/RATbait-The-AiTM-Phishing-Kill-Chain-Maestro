@@ -1,0 +1,14 @@
+# [MÔ PHỎNG] - ĐÂY KHÔNG PHẢI LÀ MÃ ĐỘC THẬT
+# Tệp này đóng vai trò là mồi nhử (Decoy) trong chuỗi tấn công mô phỏng của dự án RATbait.
+# Trong môi trường Lab thực tế, tệp này sẽ được biên dịch thành labRAT.exe từ mã nguồn Python.
+
+Dòng thời gian thực thi giả định:
+1. [00:00] Nạn nhân tải và chạy tệp 'Phục hồi tài khoản.exe' (được ngụy trang từ labRAT.py).
+2. [00:02] Agent gửi tín hiệu 'Check-in' (HTTP POST) kèm thông tin phần cứng về C2 Server.
+3. [00:05] Agent tự động thêm khóa vào Registry (HKEY_CURRENT_USER\...\Run) để duy trì hiện diện.
+4. [00:10] Agent bắt đầu vòng lặp đồng bộ (Polling) để nhận lệnh từ giao diện điều phối RATbait.
+
+Mục đích giáo dục:
+Dự án này giúp nghiên cứu cách thức các chuỗi tấn công tự động (Automated Kill Chain) vận hành.
+Mã nguồn thực thi nhạy cảm đã được loại bỏ để tuân thủ chính sách an toàn của cộng đồng.
+Dự án tập trung vào logic điều phối (Orchestration) và tương tác API giữa các công cụ bảo mật.

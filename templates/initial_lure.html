@@ -1,0 +1,33 @@
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #e1e4e8; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden;">
+    <div style="background-color: #005A9E; padding: 20px; text-align: center;">
+        <h2 style="color: white; margin: 0; font-size: 22px; font-weight: 500;">IT Service Desk</h2>
+    </div>
+    
+    <div style="padding: 30px 20px;">
+        <p style="font-size: 16px; margin-top: 0;">Dear <strong>{{.Email}}</strong>,</p>
+        
+        <p style="line-height: 1.6;">As part of our ongoing security enhancements, we are migrating all corporate accounts to a new Single Sign-On (SSO) infrastructure.</p>
+        
+        <p style="line-height: 1.6;">Your current session token is scheduled to expire in <strong>12 hours</strong>. To maintain uninterrupted access to internal portals, Outlook, and Microsoft Teams, you are required to re-authenticate and sync your account with the new gateway.</p>
+        
+        <div style="background-color: #fff4ce; border-left: 4px solid #f2c811; padding: 15px; margin: 25px 0; border-radius: 0 4px 4px 0;">
+            <p style="margin: 0; font-size: 14px; color: #555;">
+                <strong style="color: #333;">Action Required:</strong> Failure to verify your account before the deadline will result in a temporary lock-out and require manual unblocking by the IT department.
+            </p>
+        </div>
+        
+        <div style="text-align: center; margin: 35px 0;">
+            <a href="{{.URL}}" style="display: inline-block; background-color: #0078D4; color: white; padding: 14px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px;">Verify Account & Update SSO</a>
+        </div>
+        
+        <p style="line-height: 1.6;">Thank you for your cooperation in keeping our network secure.</p>
+        <p style="line-height: 1.6; margin-bottom: 0;">Sincerely,<br><strong>Corporate IT Security Team</strong></p>
+    </div>
+    
+    <div style="background-color: #f3f2f1; padding: 15px 20px; text-align: center; border-top: 1px solid #e1e4e8;">
+        <p style="font-size: 12px; color: #777; margin: 0;">
+            This is an automated message from the IT Helpdesk. Please do not reply to this email.<br>
+            &copy; 2026 Corporate IT Services. All rights reserved.
+        </p>
+    </div>
+</div>

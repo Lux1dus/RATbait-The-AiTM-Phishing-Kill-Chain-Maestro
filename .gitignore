@@ -1,0 +1,27 @@
+# Các file được biên dịch / tối ưu hóa / file DLL
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Bí mật C2 và Môi trường
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Các file đặc thù của dự án
+dataset/*.db
+dataset/*.sqlite3
+/root/.evilginx/data.db
+
+# Logs và cơ sở dữ liệu
+*.log
+*.sqlite
+*.db
+
+# Các file do hệ điều hành tạo ra
+.DS_Store
+Thumbs.db

