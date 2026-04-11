@@ -30,7 +30,7 @@ Dưới đây là giao diện điều phối (Orchestrator Console) của **RATb
 ## I. Câu Chuyện Phía Sau (The Backstory & Motivation)
 
 ### Khởi nguồn ý tưởng
-Từ lâu, Phishing đối với tôi chỉ dừng lại ở những khái niệm cơ bản như "đừng bấm vào link lạ" hay "kiểm tra kỹ người gửi". Tuy nhiên, khi tìm hiểu về các vụ tấn công nhắm vào nhân sự cấp cao (Spear Phishing/Whaling), như vụ tấn công vào năm 2015 bởi (**[BBC](https://www.bbc.com/news/world-europe-32897069)**), hay vụ rò rỉ dữ liệu của năm 2016 (**[BBC](https://www.bbc.com/news/world-us-canada-37639370)**), tôi nhận ra đây là một lỗ hổng con người cực kỳ nguy hiểm mà mình cần đào sâu nghiên cứu.
+Từ lâu, Phishing đối với tôi chỉ dừng lại ở những khái niệm cơ bản như "đừng bấm vào link lạ" hay "kiểm tra kỹ người gửi". Tuy nhiên, một ngày nọ, tôi lướt tháy video này **[Russia's Most Wanted Hacker](https://www.youtube.com/watch?v=ZhfI0EboPU0)** liên quan trực tiếp đến **[The Bundestag Hack 2015](https://cyberlaw.ccdcoe.org/wiki/Bundestag_Hack_(2015))** tôi bắt đầu tìm hiểu thêm về các vụ tấn công nhắm vào nhân sự cấp cao (Spear Phishing/Whaling) tôi nhanh chóng nhận ra đây là một lỗ hổng con người cực kỳ nguy hiểm mà mình cần đào sâu nghiên cứu.
 
 **RATbait** ra đời từ sự tò mò đó. Đây cũng là thời điểm thích hợp để tôi kết hợp nó cùng dự án **[labRAT](https://github.com/Lux1dus/LabRAT-C2-Framework)** của mình, tạo nên một chuỗi tấn công (Kill Chain) giả định hoàn chỉnh: từ giây phút nạn nhân nhận email mạo danh cho đến khi Agent chính thức được thực thi trên máy mục tiêu.
 
