@@ -1,14 +1,14 @@
-# [MÔ PHỎNG] - ĐÂY KHÔNG PHẢI LÀ MÃ ĐỘC THẬT
-# Tệp này đóng vai trò là mồi nhử (Decoy) trong chuỗi tấn công mô phỏng của dự án RATbait.
-# Trong môi trường Lab thực tế, tệp này sẽ được biên dịch thành labRAT.exe từ mã nguồn Python.
+# [SIMULATION] - THIS IS NOT REAL MALWARE
+# This file serves as a decoy in the simulated kill chain of the RATbait project.
+# In a real Lab environment, this file would be compiled into labRAT.exe from Python source code.
 
-Dòng thời gian thực thi giả định:
-1. [00:00] Nạn nhân tải và chạy tệp 'Phục hồi tài khoản.exe' (được ngụy trang từ labRAT.py).
-2. [00:02] Agent gửi tín hiệu 'Check-in' (HTTP POST) kèm thông tin phần cứng về C2 Server.
-3. [00:05] Agent tự động thêm khóa vào Registry (HKEY_CURRENT_USER\...\Run) để duy trì hiện diện.
-4. [00:10] Agent bắt đầu vòng lặp đồng bộ (Polling) để nhận lệnh từ giao diện điều phối RATbait.
+Simulated execution timeline:
+1. [00:00] Victim downloads and runs the 'Account Recovery.exe' file (disguised from labRAT.py).
+2. [00:02] Agent sends a 'Check-in' signal (HTTP POST) with hardware information to the C2 Server.
+3. [00:05] Agent automatically adds a key to the Registry (HKEY_CURRENT_USER\...\Run) to maintain persistence.
+4. [00:10] Agent begins a Polling loop to receive commands from the RATbait coordination interface.
 
-Mục đích giáo dục:
-Dự án này giúp nghiên cứu cách thức các chuỗi tấn công tự động (Automated Kill Chain) vận hành.
-Mã nguồn thực thi nhạy cảm đã được loại bỏ để tuân thủ chính sách an toàn của cộng đồng.
-Dự án tập trung vào logic điều phối (Orchestration) và tương tác API giữa các công cụ bảo mật.
+Educational purpose:
+This project helps research how Automated Kill Chains operate.
+Sensitive executable source code has been removed to comply with community safety policies.
+The project focuses on Orchestration logic and API interactions between security tools.
