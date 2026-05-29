@@ -1,48 +1,48 @@
-# 🌐 Lý thuyết Hạ tầng & Giả lập (Infrastructure Theory)
+# 🌐 Infrastructure Theory
 
-Tài liệu này giải thích cơ chế vận hành của RATbait trong môi trường **Local Lab** và sự khác biệt so với triển khai **Thực tế (Real World)**.
+This document explains the operational mechanism of RATbait in a **Local Lab** environment and its differences compared to a **Real World** deployment.
 
 ---
 
-## I. Mô hình Lab nội bộ (Local Lab Architecture)
+## I. Local Lab Architecture
 
-Trong môi trường Lab, chúng ta không sở hữu các tên miền thật (ví dụ: `github.com`). Do đó, chúng ta phải sử dụng các kỹ thuật giả lập để đánh lừa hệ thống và trình duyệt.
+In a Lab environment, we do not own real domain names (e.g., `github.com`). Therefore, we must use simulation techniques to deceive the system and the browser.
 
-### 1. Giả lập DNS (Hosts File)
-Thay vì truy vấn các DNS Server trên Internet, chúng ta ép buộc máy tính ánh xạ các tên miền giả định về IP của máy tấn công (Kali Linux).
+### 1. DNS Simulation (Hosts File)
+Instead of querying DNS Servers on the Internet, we force the computer to map hypothetical domain names to the IP of the attacker's machine (Kali Linux).
 
-**Thao tác thực hiện:**
-Bạn cần chỉnh sửa file `/etc/hosts` (trên Linux) **VÀ** `C:\Windows\System32\drivers\etc\hosts` (trên Windows) để cả hai hệ thống đều nhận diện được tên miền ảo trỏ về IP của máy Kali:
+**Execution steps:**
+You need to edit the `/etc/hosts` file (on Linux) **AND** `C:\Windows\System32\drivers\etc\hosts` (on Windows) so that both systems recognize the virtual domain name pointing to the Kali machine's IP:
 
 ```text
-# Thay X.X.X.X bằng IP máy Kali Linux của bạn
+# Replace X.X.X.X with your Kali Linux machine's IP
 X.X.X.X github-lab.local www.github-lab.local api.github-lab.local assets.github-lab.local
 ```
 
-### 2. Giả lập SSL/TLS (mkcert)
-Evilginx yêu cầu HTTPS để hoạt động. Vì `github-lab.local` không phải tên miền thật, bạn không thể xin chứng chỉ từ Let's Encrypt. Giải pháp là sử dụng **mkcert** để tạo một **Local Root CA** riêng.
+### 2. SSL/TLS Simulation (mkcert)
+Evilginx requires HTTPS to operate. Since `github-lab.local` is not a real domain name, you cannot request a certificate from Let's Encrypt. The solution is to use **mkcert** to create a private **Local Root CA**.
 
-**Quy trình thiết lập chính xác:**
+**Exact setup process:**
 
-1.  **Cài đặt Root CA vào hệ thống:**
+1.  **Install the Root CA into the system:**
     ```bash
     mkcert -install
     ```
-    *Lệnh này biến máy bạn thành một tổ chức cấp phát chứng chỉ tin cậy (Root CA).*
+    *This command turns your machine into a trusted certificate authority (Root CA).*
 
-2.  **Xác định vị trí file Root CA (Để cài vào trình duyệt nạn nhân):**
+2.  **Determine the Root CA file location (To install in the victim's browser):**
     ```bash
     mkcert -CAROOT
     ```
-    *Bạn cần copy file `rootCA.pem` tại thư mục này và cài vào mục "Authorities" trong trình duyệt của máy nạn nhân.*
+    *You need to copy the `rootCA.pem` file in this directory and install it in the "Authorities" section in the victim machine's browser.*
 
-3.  **Tạo chứng chỉ cho tên miền Lab:**
+3.  **Create a certificate for the Lab domain name:**
     ```bash
     mkcert -cert-file fullchain.cer -key-file private.key github-lab.local "*.github-lab.local"
     ```
 
-4.  **Di chuyển chứng chỉ vào thư mục cấu hình Evilginx:**
-    Evilginx tìm kiếm chứng chỉ trong thư mục `/root/.evilginx/crt/`. Bạn cần tạo thư mục tương ứng với tên miền:
+4.  **Move the certificate to the Evilginx configuration directory:**
+    Evilginx searches for certificates in the `/root/.evilginx/crt/` directory. You need to create a directory corresponding to the domain name:
     ```bash
     sudo mkdir -p /root/.evilginx/crt/github-lab.local
     sudo mv fullchain.cer private.key /root/.evilginx/crt/github-lab.local/
@@ -50,28 +50,28 @@ Evilginx yêu cầu HTTPS để hoạt động. Vì `github-lab.local` không ph
 
 ---
 
-## II. Triển khai Thực tế (Real World Deployment)
+## II. Real World Deployment
 
-Trong môi trường thực tế, kẻ tấn công sẽ không có quyền truy cập vào file `hosts` của nạn nhân để điều hướng DNS thủ công. Thay vào đó, quy trình triển khai đòi hỏi các hạ tầng thực thụ trên mạng Internet. Kẻ tấn công thường bắt đầu bằng việc đăng ký các tên miền có vẻ ngoài đáng tin cậy nhưng thực chất là giả mạo (kỹ thuật Typosquatting), ví dụ như `githuub.com` hoặc `github-security.net`. 
+In a real-world environment, the attacker will not have access to the victim's `hosts` file to manually redirect DNS. Instead, the deployment process requires real infrastructures on the Internet. The attacker usually starts by registering domain names that look trustworthy but are actually fake (Typosquatting technique), such as `githuub.com` or `github-security.net`. 
 
-Sau khi sở hữu tên miền, chúng sẽ cấu hình các bản ghi DNS (A record, CNAME) trên các nhà cung cấp dịch vụ như Cloudflare hoặc Namecheap để trỏ về địa chỉ IP Public của một máy chủ VPS (Virtual Private Server). 
+After owning the domain name, they will configure DNS records (A record, CNAME) on service providers like Cloudflare or Namecheap to point to the Public IP address of a VPS (Virtual Private Server). 
 
-Một điểm khác biệt quan trọng nữa là việc xin chứng chỉ SSL/TLS; trong thực tế, Evilginx có thể tự động tích hợp với Let's Encrypt để lấy các chứng chỉ hợp lệ được mọi trình duyệt tin cậy mà không cần bất kỳ thao tác cài đặt Root CA thủ công nào lên máy nạn nhân. Toàn bộ hạ tầng này tạo nên một môi trường "trong suốt" khiến nạn nhân rất khó phát hiện điểm bất thường về mặt kỹ thuật.
+Another important difference is requesting SSL/TLS certificates; in reality, Evilginx can automatically integrate with Let's Encrypt to get valid certificates trusted by all browsers without requiring any manual Root CA installation on the victim's machine. This entire infrastructure creates a "transparent" environment making it very difficult for the victim to detect technical anomalies.
 
 ---
 
-## III. So sánh Lab vs Thực tế (The Comparison)
+## III. Lab vs Real World Comparison
 
-Bảng dưới đây tóm tắt các điểm khác biệt cốt lõi giữa việc giả lập trong Lab và triển khai thực chiến:
+The table below summarizes the core differences between simulating in a Lab and deploying in combat:
 
-| Thành phần | Môi trường Lab (Local) | Môi trường Thực tế (Public) |
+| Component | Lab Environment (Local) | Real Environment (Public) |
 | :--- | :--- | :--- |
-| **Tên miền** | Tên miền ảo tự đặt (`.local`, `.test`). | Tên miền đăng ký chính thức (`.com`, `.net`). |
-| **DNS** | Sửa file `hosts` trên từng máy. | Cấu hình bản ghi DNS trên Internet. |
-| **SSL/TLS** | Tự cấp phát bằng `mkcert` (Cần cài Root CA). | Chứng chỉ hợp lệ từ Let's Encrypt (Tin cậy 100%). |
-| **Hạ tầng IP** | IP nội bộ (LAN / Host-only). | IP Public trên VPS. |
-| **Độ phức tạp** | Cao (Do phải cấu hình giả lập thủ công). | Thấp (Mọi thứ đều vận hành tự động theo tiêu chuẩn). |
+| **Domain** | Self-named virtual domain (`.local`, `.test`). | Officially registered domain (`.com`, `.net`). |
+| **DNS** | Edit `hosts` file on each machine. | Configure DNS records on the Internet. |
+| **SSL/TLS** | Self-issued with `mkcert` (Requires Root CA installation). | Valid certificate from Let's Encrypt (100% Trusted). |
+| **IP Infrastructure** | Internal IP (LAN / Host-only). | Public IP on a VPS. |
+| **Complexity** | High (Due to manual simulation configuration). | Low (Everything operates automatically according to standards). |
 
 ---
-**Điều hướng (Navigation):**
-[🏠 Trang chủ](../README.md) | [⚙️ Thiết lập Lab](LAB_SETUP.md) | **[🌐 Lý thuyết Hạ tầng](INFRA_THEORY.md)** | [🚀 Quy trình Demo](KILLCHAIN.md)
+**Navigation:**
+[🏠 Home](../README.md) | [⚙️ Lab Setup](LAB_SETUP.md) | **[🌐 Infrastructure Theory](INFRA_THEORY.md)** | [🚀 Demo Kill Chain](KILLCHAIN.md)
