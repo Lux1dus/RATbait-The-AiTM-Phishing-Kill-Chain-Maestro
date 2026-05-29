@@ -1,6 +1,6 @@
-#### ⚠️ Tuyên bố miễn trừ trách nhiệm
+#### ⚠️ Disclaimer
 
-Dự án này là một Proof of Concept (PoC) được phát triển cho mục đích giáo dục, nghiên cứu an ninh mạng và thử nghiệm trong môi trường Lab đã được cấp phép. Tác giả không chịu trách nhiệm đối với bất kỳ hành vi lạm dụng, thiệt hại hoặc hoạt động trái pháp luật nào phát sinh từ việc sử dụng dự án này. Việc sử dụng công cụ này trên các hệ thống khi chưa có sự cho phép rõ ràng có thể vi phạm pháp luật nghiêm trọng.
+This project is a Proof of Concept (PoC) developed for educational purposes, cybersecurity research, and testing in an authorized Lab environment. The author is not responsible for any misuse, damage, or illegal activities arising from the use of this project. Using this tool on systems without explicit permission can be a serious violation of the law.
 <br>
 
 ---
@@ -13,168 +13,168 @@ Dự án này là một Proof of Concept (PoC) được phát triển cho mục 
 
 --- 
 
-## Trải nghiệm Nhanh (System Preview)
+## System Preview
 
-Dưới đây là giao diện điều phối (Orchestrator Console) của **RATbait** khi đang lắng nghe dữ liệu từ Evilginx.
+Below is the Orchestrator Console interface of **RATbait** while listening to data from Evilginx.
 
 <p align="center">
   <img src="assets/images/ratbaitui.png" alt="RATbait Orchestrator Preview" width="450">
 </p>
 
-**Bạn muốn xem RATbait lúc chạy mô phỏng sẽ ra sao?**
+**Want to see what RATbait looks like during a simulation?**
 
-[👉 Mô phỏng chuỗi tấn công (KILLCHAIN.md)](docs/KILLCHAIN.md)
-
----
-
-## I. Câu Chuyện Phía Sau (The Backstory & Motivation)
-
-### Khởi nguồn ý tưởng
-Từ lâu, Phishing đối với tôi chỉ dừng lại ở những khái niệm cơ bản như 'đừng bấm vào link lạ' hay 'kiểm tra kỹ người gửi'. Tuy nhiên, một ngày nọ, khi lướt thấy video **[Russia's Most Wanted Hacker](https://www.youtube.com/watch?v=ZhfI0EboPU0)** liên quan trực tiếp đến **[The Bundestag Hack 2015](https://cyberlaw.ccdcoe.org/wiki/Bundestag_Hack_(2015))**, tôi bắt đầu đào sâu hơn về các cuộc tấn công nhắm vào nhân sự cấp cao (Spear Phishing/Whaling). Và chính lúc đó, tôi nhận ra đây là một lỗ hổng con người cực kỳ nguy hiểm mà mình cần nghiêm túc nghiên cứu.
-
-**RATbait** ra đời từ sự tò mò đó. Đây cũng là thời điểm thích hợp để tôi kết hợp nó cùng dự án **[labRAT](https://github.com/Lux1dus/LabRAT-C2-Framework)** của mình, tạo nên một chuỗi tấn công (Kill Chain) giả định hoàn chỉnh: từ giây phút nạn nhân nhận email mạo danh cho đến khi Agent chính thức được thực thi trên máy mục tiêu.
-
-### Mục tiêu cá nhân
-*   Đào sâu vào cơ chế vận hành của các cuộc tấn công Phishing hiện đại vượt qua MFA.
-*   Xây dựng một hệ thống điều phối (Orchestration) có khả năng kết nối các công cụ bảo mật rời rạc.
-*   Phát triển tư duy **Purple Team**: Hiểu cách tấn công tự động hóa để thiết kế các phương án phòng thủ hiệu quả hơn.
+[👉 Kill Chain Simulation (KILLCHAIN.md)](docs/KILLCHAIN.md)
 
 ---
 
-## II. Tổng Quan Dự Án (Project Overview)
+## I. The Backstory & Motivation
 
-### Tóm tắt (Executive Summary)
-- **RATbait** là một Framework tự động hóa chuỗi tấn công (Automated Kill Chain), tích hợp Evilginx 3.0 và GoPhish API.
+### Origin of the idea
+For a long time, Phishing to me was just basic concepts like 'don't click strange links' or 'check the sender carefully'. However, one day, while watching the video **[Russia's Most Wanted Hacker](https://www.youtube.com/watch?v=ZhfI0EboPU0)** which is directly related to **[The Bundestag Hack 2015](https://cyberlaw.ccdcoe.org/wiki/Bundestag_Hack_(2015))**, I began to dig deeper into attacks targeting high-level personnel (Spear Phishing/Whaling). And right then, I realized this is an extremely dangerous human vulnerability that I needed to seriously research.
 
-- Hệ thống đóng vai trò là lớp trung gian (Middleware), liên tục giám sát cơ sở dữ liệu của Evilginx. Ngay khi phát hiện nạn nhân mới, nó sẽ tự động trích xuất Session Cookie và kích hoạt các chiến dịch phishing "đạn kép" (Combo Mode) để phân phát mã độc.
+**RATbait** was born from that curiosity. It was also the right time for me to combine it with my **[labRAT](https://github.com/Lux1dus/LabRAT-C2-Framework)** project, creating a complete hypothetical Kill Chain: from the moment the victim receives a fake email until the Agent is officially executed on the target machine.
 
-- Toàn bộ quy trình từ đánh cắp Token đến thực thi RAT trên máy nạn nhân được tự động hóa, giảm thiểu tối đa thời gian tương tác thủ công của Operator.
+### Personal Goals
+*   Delve into the operational mechanism of modern Phishing attacks bypassing MFA.
+*   Build an Orchestration system capable of connecting disjointed security tools.
+*   Develop a **Purple Team** mindset: Understand automated attacks to design more effective defense strategies.
 
-### Công nghệ sử dụng (Tech Stack)
-Hệ thống kết hợp các công nghệ hàng đầu trong giới Red Team để tạo ra một chuỗi tấn công liên hoàn:
+---
 
-| Thành phần (Component) | Công nghệ (Tech) | Vai trò & Đặc điểm (Role & Features) |
+## II. Project Overview
+
+### Executive Summary
+- **RATbait** is an Automated Kill Chain Framework, integrating Evilginx 3.0 and the GoPhish API.
+
+- The system acts as a Middleware, continuously monitoring Evilginx's database. As soon as it detects a new victim, it automatically extracts the Session Cookie and triggers "double-bullet" phishing campaigns (Combo Mode) to distribute malware.
+
+- The entire process from Token theft to RAT execution on the victim's machine is automated, minimizing the Operator's manual interaction time.
+
+### Tech Stack
+The system combines top-tier technologies in the Red Team community to create a continuous attack chain:
+
+| Component | Tech | Role & Features |
 | :--- | :--- | :--- |
-| **Orchestrator** | `Python (Threaded)` | "Bộ não" của hệ thống. Giám sát DB, xử lý logic tấn công và điều phối API. |
-| **AiTM Engine** | `Evilginx 3.0` | Đóng vai trò Proxy ngược để đánh cắp Session Cookie và vượt MFA. |
-| **Phishing API** | `GoPhish` | Quản lý việc gửi email lure, theo dõi lượt click và phân phát tệp thực thi. |
-| **RAT Agent** | `Python (labRAT)` | Mã độc điều khiển từ xa, hỗ trợ persistence và lẩn tránh (Safe Mode). |
-| **Database** | `JSON` | Lưu trữ dữ liệu nạn nhân, tokens và trạng thái các chiến dịch. |
+| **Orchestrator** | `Python (Threaded)` | The "brain" of the system. Monitors DB, handles attack logic, and coordinates APIs. |
+| **AiTM Engine** | `Evilginx 3.0` | Acts as a reverse proxy to steal Session Cookies and bypass MFA. |
+| **Phishing API** | `GoPhish` | Manages sending lure emails, tracks clicks, and distributes the executable file. |
+| **RAT Agent** | `Python (labRAT)` | Remote-controlled malware, supporting persistence and evasion (Safe Mode). |
+| **Database** | `JSON` | Stores victim data, tokens, and campaign statuses. |
 
 ---
 
-## Khởi động Nhanh (Getting Started - Lab Setup)
+## Getting Started - Lab Setup
 
-[👉 Xem cách cài đặt chi tiết các thành phần khác trước khi chạy RATbait (LAB_SETUP.md)](docs/LAB_SETUP.md)
+[👉 See detailed installation for other components before running RATbait (LAB_SETUP.md)](docs/LAB_SETUP.md)
 
-Để triển khai RATbait trong môi trường Lab (Kali Linux/Debian), hãy thực hiện các bước sau:
+To deploy RATbait in a Lab environment (Kali Linux/Debian), perform the following steps:
 
-### 1. Cài đặt Môi trường
-Tải mã nguồn và cài đặt các thư viện phụ thuộc:
+### 1. Environment Setup
+Download the source code and install dependencies:
 ```bash
 git clone <this repo>
 cd RATbait
 pip install -r requirements.txt
 ```
 
-### 2. Cấu hình Biến Môi trường
-Tạo file `.env` từ file mẫu và thiết lập các thông số kết nối quan trọng:
+### 2. Environment Variables Configuration
+Create a `.env` file from the example file and set up important connection parameters:
 ```bash
 cp .env.example .env
-# Sử dụng nano hoặc vim để chỉnh sửa các tham số sau:
+# Use nano or vim to edit the following parameters:
 ```
-**Các tham số cần lưu ý trong `.env`:**
-*   `GOPHISH_API_KEY`: Lấy từ phần cấu hình tài khoản (Settings) trên giao diện quản trị GoPhish.
-*   `EVILGINX_DB_PATH`: Đường dẫn tuyệt đối đến file `data.db` của Evilginx (thông thường là `/root/.evilginx/data.db`).
-*   `C2_SERVER_URL`: Địa chỉ IP của máy chủ lắng nghe kết nối từ mã độc (labRAT).
-*   `PAYLOAD_URL`: Đường dẫn tải file mã độc mồi nhử (được hiển thị trong email phishing).
+**Key parameters in `.env`:**
+*   `GOPHISH_API_KEY`: Obtained from the Settings configuration on the GoPhish admin interface.
+*   `EVILGINX_DB_PATH`: Absolute path to Evilginx's `data.db` file (usually `/root/.evilginx/data.db`).
+*   `C2_SERVER_URL`: IP address of the server listening for connections from the malware (labRAT).
+*   `PAYLOAD_URL`: Download link for the decoy malware file (displayed in the phishing email).
 
-### 3. Hiệu chỉnh RATbait.py (Nếu cần)
-Mở file `RATbait.py`, kiểm tra các biến cấu hình mặc định ở đầu file để đảm bảo chúng khớp với môi trường Lab của bạn (ví dụ: Cấu hình SMTP và Template mặc định).
+### 3. Adjust RATbait.py (If needed)
+Open the `RATbait.py` file, check the default configuration variables at the top of the file to ensure they match your Lab environment (e.g., SMTP Config and default Templates).
 
-### 3. Kích hoạt Nhạc trưởng
-Khởi chạy Orchestrator với quyền root (để đọc DB Evilginx):
+### 4. Activate the Conductor
+Run the Orchestrator with root privileges (to read the Evilginx DB):
 ```bash
 sudo python3 RATbait.py
 ```
-*Sau khi chạy, bạn có thể chọn chế độ tấn công (Enterprise, Friend hoặc Combo) ngay trên giao diện CLI.*
+*After running, you can select the attack mode (Enterprise, Friend, or Combo) right on the CLI interface.*
 
 ---
 
-
-### Quy Trình Hoạt Động (Workflow)
-Hệ thống **RATbait** vận hành theo một chuỗi tấn công tự động hóa bao gồm 6 bước khép kín:
+### Workflow
+The **RATbait** system operates in an automated attack chain comprising 6 closed steps:
 
 <p align="center">
-  <img src="assets/images/quytrinhhoatdong.png" alt="Quy trình hoạt động">
+  <img src="assets/images/quytrinhhoatdong.png" alt="Workflow">
 </p>
 
-| Bước | Giai đoạn (Phase) | Công cụ | Mô tả chi tiết (Description) |
+| Step | Phase | Tool | Description |
 | :---: | :--- | :---: | :--- |
-| **1** | **Initial Lure**<br>*(Gửi mồi nhử)* | `Attacker` | Kẻ tấn công khởi xướng bằng cách gửi đường dẫn mạo danh trang đăng nhập uy tín. Nạn nhân truy cập và tiến hành đăng nhập. |
-| **2** | **AiTM Harvesting**<br>*(Đánh cắp phiên)* | `Evilginx 3.0` | Hoạt động như Reverse Proxy, thu thập `Username/Password`, vượt qua xác thực MFA và cướp trọn **Session Cookie**, lưu vào `data.db`. |
-| **3** | **Continuous Sniffing**<br>*(Giám sát & Trích xuất)* | 🧠 `RATbait` | Liên tục giám sát `data.db`. Ngay khi có Session Cookie mới, hệ thống tự động trích xuất thông tin.<br><br> *> Hỗ trợ CLI để Operator trích xuất nhanh Cookie phục vụ Pass-the-Cookie.* |
-| **4** | **Automated Orchestration**<br>*(Điều phối chiến dịch)* | `RATbait`<br> `GoPhish API` | Dựa trên dữ liệu thu thập được, RATbait tự động gọi API của GoPhish để khởi tạo chiến dịch tấn công bồi (giai đoạn 2) vào email nạn nhân. |
-| **5** | **Payload Delivery**<br>*(Phân phát mã độc)* | `GoPhish` | Gửi email thao túng tâm lý (vd: cảnh báo bảo mật). File đính kèm là `labRAT.exe` nhưng được ngụy trang thành tài liệu (PDF/DOCX) bằng **RTLO**. |
-| **6** | **Execution & Reverse C2**<br>*(Thực thi & Kiểm soát)* | `labRAT` | Nạn nhân tải và chạy file đính kèm. Mã độc kích hoạt ngầm, tạo kết nối đảo (Reverse C2). Attacker có **quyền kiểm soát toàn diện** thiết bị. |
-## III. Kiến Trúc Điều Phối & API (Orchestration & API Flow)
+| **1** | **Initial Lure** | `Attacker` | The attacker initiates by sending a link spoofing a reputable login page. The victim visits and proceeds to log in. |
+| **2** | **AiTM Harvesting** | `Evilginx 3.0` | Acts as a Reverse Proxy, collecting `Username/Password`, bypassing MFA authentication, completely hijacking the **Session Cookie**, and saving it to `data.db`. |
+| **3** | **Continuous Sniffing** | 🧠 `RATbait` | Continuously monitors `data.db`. As soon as there's a new Session Cookie, the system automatically extracts the information.<br><br> *> Supports CLI for the Operator to quickly extract Cookies for Pass-the-Cookie.* |
+| **4** | **Automated Orchestration** | `RATbait`<br> `GoPhish API` | Based on the collected data, RATbait automatically calls GoPhish's API to initiate a follow-up attack campaign (stage 2) to the victim's email. |
+| **5** | **Payload Delivery** | `GoPhish` | Sends psychologically manipulative emails (e.g., security alerts). The attachment is `labRAT.exe` but disguised as a document (PDF/DOCX) using **RTLO**. |
+| **6** | **Execution & Reverse C2** | `labRAT` | The victim downloads and runs the attachment. The malware activates silently, creating a reverse connection (Reverse C2). The attacker has **full control** of the device. |
 
-Hệ thống RATbait được thiết kế dựa trên mô hình **Asynchronous Multi-threading** (Đa luồng bất đồng bộ), đảm bảo việc giám sát dữ liệu diễn ra liên tục theo thời gian thực mà không làm gián đoạn trải nghiệm điều khiển thủ công của Operator.
+## III. Orchestration & API Flow
 
-### 1. Mô hình Đa Luồng (Dual-Thread Architecture)
-| Luồng xử lý | Tên hàm (Function) | Kỹ thuật cốt lõi (Core Tech) | Nhiệm vụ chính |
+The RATbait system is designed based on an **Asynchronous Multi-threading** model, ensuring data monitoring happens continuously in real-time without interrupting the Operator's manual control experience.
+
+### 1. Dual-Thread Architecture
+| Processing Thread | Function Name | Core Tech | Main Task |
 | :--- | :--- | :--- | :--- |
-| **Daemon Thread**<br>*(Chạy nền)* | `sniffer_thread()` | `File I/O Polling` &<br>`Regex Parsing` | Liên tục đọc đuôi (tail) file `data.db` của Evilginx. Sử dụng Regex để truy xuất nhanh thông tin đăng nhập (`username/password`) ngay khi nạn nhân vừa submit. |
-| **Main Thread**<br>*(Chạy nổi)* | `interactive_console()` | `CLI Input Loop` &<br>`JSON Processing` | Cung cấp giao diện tương tác Cyberpunk. Cho phép Operator gõ lệnh (vd: `show cookies <email>`). Luồng này sẽ parse cấu trúc JSON phức tạp để lọc ra chính xác Session Token. |
+| **Daemon Thread**<br>*(Background)* | `sniffer_thread()` | `File I/O Polling` &<br>`Regex Parsing` | Continuously reads the tail of Evilginx's `data.db` file. Uses Regex to quickly extract login credentials (`username/password`) right when the victim submits them. |
+| **Main Thread**<br>*(Foreground)* | `interactive_console()` | `CLI Input Loop` &<br>`JSON Processing` | Provides a Cyberpunk interactive interface. Allows the Operator to type commands (e.g., `show cookies <email>`). This thread parses complex JSON structures to accurately filter out the Session Token. |
 
-### 2. Luồng gọi API & Logic "Đạn kép" (GoPhish API Flow)
-Thay vì cấu hình chiến dịch thủ công, luồng `trigger_payloads()` sẽ tự động hóa hoàn toàn quy trình tương tác với GoPhish API qua các bước:
+### 2. GoPhish API Flow & "Double-Bullet" Logic
+Instead of configuring campaigns manually, the `trigger_payloads()` thread will fully automate the process of interacting with the GoPhish API through these steps:
 
-1. **Target Generation (`POST /api/groups`)**: Tự động tạo một nhóm mục tiêu mới (Group) chứa duy nhất email của nạn nhân vừa sập bẫy.
-2. **Campaign Launch (`POST /api/campaigns`)**: Kết hợp Group vừa tạo với các Mẫu email (Template) và Cấu hình gửi (SMTP) có sẵn để phát động chiến dịch.
-3. **Combo Mode Logic**: Nếu Operator chọn chế độ số 3 (Combo Mode), hệ thống sẽ thực thi thuật toán **Tấn công bồi**:
+1. **Target Generation (`POST /api/groups`)**: Automatically creates a new target Group containing only the email of the victim who just fell for the trap.
+2. **Campaign Launch (`POST /api/campaigns`)**: Combines the newly created Group with available Email Templates and SMTP Configs to launch the campaign.
+3. **Combo Mode Logic**: If the Operator selects mode 3 (Combo Mode), the system will execute the **Follow-up attack** algorithm:
 
-   - Bắn API chiến dịch 1 (Enterprise Lure).
-   - Tạm dừng chính xác `30 giây` (`time.sleep(30)`) để tạo độ trễ tự nhiên (Natural Delay), tránh các bộ lọc thư rác (Spam Filters).
-   - Tiếp tục bắn API chiến dịch 2 (Friend Lure) để tăng tối đa tỉ lệ nạn nhân click vào Payload.
+   - Fire API campaign 1 (Enterprise Lure).
+   - Pause exactly `30 seconds` (`time.sleep(30)`) to create a Natural Delay, avoiding Spam Filters.
+   - Proceed to fire API campaign 2 (Friend Lure) to maximize the chance of the victim clicking the Payload.
 
 ---
 
-## IV. Các Điểm Hạn Chế & Rủi Ro (Current Limitations)
+## IV. Current Limitations & Risks
 
-Mặc dù là một Framework mạnh mẽ, **RATbait** hiện tại vẫn có những điểm giới hạn về mặt kiến trúc cần lưu ý:
+Despite being a powerful Framework, **RATbait** currently has some architectural limitations to keep in mind:
 
-| Nhược điểm (Limitation) | Nguyên nhân kỹ thuật | Rủi ro (Risk) |
+| Limitation | Technical Cause | Risk |
 | :--- | :--- | :--- |
-| **Local DB Dependency** | Yêu cầu quyền truy cập đọc trực tiếp vào file `data.db` của Evilginx trên cùng một Server. | Khó triển khai trong kiến trúc phân tán (Server C2 và Phishing tách biệt). |
-| **Unproxied API Calls** | Các request gọi tới GoPhish API (Port 3333) hiện đang được gửi trực tiếp không qua bọc (Proxy). | Traffic có thể bị Blue Team bắt được, dẫn tới việc C2 IP bị đưa vào Blacklist. |
-| **Plaintext Token Exposure** | Session Cookies trích xuất ra được hiển thị dạng bản rõ (Plaintext) trên Terminal của Operator. | Rủi ro rò rỉ Token nhạy cảm qua màn hình/log nếu máy điều khiển bị giám sát. |
+| **Local DB Dependency** | Requires direct read access to Evilginx's `data.db` file on the same Server. | Hard to deploy in a distributed architecture (Separate C2 Server and Phishing). |
+| **Unproxied API Calls** | Requests to the GoPhish API (Port 3333) are currently sent directly without a Proxy. | Traffic could be intercepted by Blue Team, leading to the C2 IP being Blacklisted. |
+| **Plaintext Token Exposure** | Extracted Session Cookies are displayed in Plaintext on the Operator's Terminal. | Risk of sensitive Token leakage via screen/logs if the control machine is monitored. |
 
 ---
 
-## V. Lộ Trình Phát Triển (Future Roadmap)
+## V. Future Roadmap
 
-Định hướng nâng cấp RATbait thành một hệ thống C2 Orchestrator phân tán và thông minh hơn:
+Direction for upgrading RATbait into a more distributed and intelligent C2 Orchestrator system:
 
-| Giai đoạn | Module Nâng cấp | Mô tả chi tiết & Mục tiêu |
+| Phase | Upgrade Module | Detailed Description & Goal |
 | :---: | :--- | :--- |
-| **Phase 2** | **Remote DB Support** | Hỗ trợ đọc dữ liệu từ Evilginx Server từ xa thông qua giao thức SSH hoặc gRPC. |
-| **Phase 3** | **C2 Notification Integrations**| Tích hợp bot thông báo nạn nhân mới sập bẫy trực tiếp qua Telegram hoặc Discord. |
-| **Phase 4** | **Generative AI Lures** | Sử dụng LLM (GPT API) để tự động phân tích ngữ cảnh và soạn nội dung email phishing cá nhân hóa. |
-| **Phase 5** | **Payload Evasion** | Tích hợp bộ mã hóa động (Dynamic Encoders) cho `labRAT` để qua mặt các hệ thống EDR hiện đại khi phân phát. |
+| **Phase 2** | **Remote DB Support** | Support reading data from a remote Evilginx Server via SSH or gRPC protocols. |
+| **Phase 3** | **C2 Notification Integrations**| Integrate bot to notify of new trapped victims directly via Telegram or Discord. |
+| **Phase 4** | **Generative AI Lures** | Use LLMs (GPT API) to automatically analyze context and draft personalized phishing emails. |
+| **Phase 5** | **Payload Evasion** | Integrate Dynamic Encoders for `labRAT` to bypass modern EDR systems during delivery. |
 
 ---
 
-## VI. Những kiến thức mới (Key Learnings & Concepts)
+## VI. Key Learnings & Concepts
 
-Trong quá trình xây dựng **RATbait**, dự án đã giúp củng cố các tư duy phòng thủ và tấn công nâng cao:
+During the process of building **RATbait**, the project has helped reinforce advanced defensive and offensive mindsets:
 
-| Kiến thức | Chi tiết kỹ thuật & Ứng dụng |
+| Concept | Technical Details & Applications |
 | :--- | :--- |
-| **AiTM Automation** | Hiểu sâu sắc cơ chế đánh cắp và thao tác trực tiếp trên Session Tokens để vượt qua các rào cản MFA. |
-| **Security Orchestration** | Nắm vững cách liên kết các công cụ bảo mật rời rạc (Evilginx, GoPhish) thông qua API để tạo thành một chuỗi cung ứng tấn công (Kill Chain) liền mạch. |
-| **Real-time Processing** | Ứng dụng kỹ thuật đa luồng (Multi-threading) và I/O Polling để xử lý dữ liệu lớn theo thời gian thực mà không làm treo ứng dụng. |
-| **Social Engineering** | Áp dụng thành công kỹ thuật "Double-dip" (Tấn công bồi đạn kép) giúp tối đa hóa tỷ lệ lừa đảo thành công. |
+| **AiTM Automation** | Deep understanding of the mechanism of stealing and directly manipulating Session Tokens to bypass MFA barriers. |
+| **Security Orchestration** | Mastering how to link disjointed security tools (Evilginx, GoPhish) via API to form a seamless attack supply chain (Kill Chain). |
+| **Real-time Processing** | Applying Multi-threading and I/O Polling techniques to process large data in real-time without crashing the application. |
+| **Social Engineering** | Successfully applying the "Double-dip" technique to maximize the phishing success rate. |
 
 ---
 
